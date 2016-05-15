@@ -14,6 +14,13 @@ var app = express();
 var server = http.Server(app);
 
 app.get('/:group', function(req, res) {
+    if (!_.has(GROUPS, req.params.group)) {
+        res.sendStatus(500);
+        return;
+    }
+
+    let group = GROUPS[req.params.group];
+
     let steamID;
 
     try {
@@ -24,37 +31,30 @@ app.get('/:group', function(req, res) {
         return;
     }
 
-    let group = GROUPS[req.params.group];
+    let steam64 = steamID.getSteamID64();
 
-    if (group) {
-        let steam64 = steamID.getSteamID64();
+    let matchingUsers = _.filter(group.users, ['user', steam64]);
 
-        let matchingUsers = _.filter(group.users, ['user', steam64]);
-
-        for (let user of matchingUsers) {
-            if (_.has(user, 'expires') && moment().isAfter(user.expires)) {
-                continue;
-            }
-
-            if (user.member) {
-                res.sendStatus(200);
-                return;
-            }
-            else {
-                res.sendStatus(403);
-                return;
-            }
+    for (let user of matchingUsers) {
+        if (_.has(user, 'expires') && moment().isAfter(user.expires)) {
+            continue;
         }
 
-        if (_.has(group, 'membershipDefault') && group.membershipDefault) {
+        if (user.member) {
             res.sendStatus(200);
+            return;
         }
         else {
             res.sendStatus(403);
+            return;
         }
     }
+
+    if (_.has(group, 'membershipDefault') && group.membershipDefault) {
+        res.sendStatus(200);
+    }
     else {
-        res.sendStatus(500);
+        res.sendStatus(403);
     }
 });
 
