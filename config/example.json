@@ -1,0 +1,12 @@
+{
+    "groups": {
+        "admins": {
+            "membershipDefault": false,
+            "users": [{
+                "user": "76561198043850090",
+                "member": true,
+                "expires": "2016-06-15"
+            }]
+        }
+    }
+}
