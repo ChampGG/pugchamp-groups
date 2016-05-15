@@ -59,7 +59,7 @@ app.get('/:group', function(req, res) {
 });
 
 try {
-    fs.unlinkSync(config.get('server.listen'));
+    fs.unlinkSync(config.get('listen'));
 }
 catch (err) {
     // ignore
