@@ -59,16 +59,16 @@ app.get('/:group', function(req, res) {
 });
 
 try {
-    fs.unlinkSync(config.get('listen'));
+    fs.unlinkSync(config.get('server.listen'));
 }
 catch (err) {
     // ignore
 }
 
-server.listen(config.get('listen'));
+server.listen(config.get('server.listen'));
 
 try {
-    fs.chmodSync(config.get('listen'), '775');
+    fs.chmodSync(config.get('server.listen'), '775');
 }
 catch (err) {
     // ignore
